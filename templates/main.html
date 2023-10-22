@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Latest game: {{ game.name }} </h1>
+    {{ game.description }} <br>
+    <div class="centered-button">
+        <a href="{% url 'games' %}" class="btn btn-primary">View All Games</a>
+    </div>
+
+    <h1>Latest article: {{ article.title }} </h1>
+    {{ article.description }} <br>
+    <div class="centered-button">
+        <a href="{% url 'articles' %}" class="btn btn-primary">View All Articles</a>
+    </div>
+
+    <h1>Latest market offer: {{ offer.get_offer_type_display }} - {{ offer.game }}</h1>
+    {{ offer.description }} <br>
+    <div class="centered-button">
+        <a href="{% url 'market' %}" class="btn btn-primary">View Market</a>
+    </div>
+
+    <h1>About</h1>
+    Welcome to GameConnect, place where you can find exclusive articles regarding my favourite games, exchange games with our community in market section.
+{% endblock %}

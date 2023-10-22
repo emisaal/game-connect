@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
+from django.forms import ModelForm
+
+from gameapp.models import ExchangeOffer
 
 User = get_user_model()
 
@@ -24,3 +27,26 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+
+
+class AddOfferForm(ModelForm):
+    class Meta:
+        model = ExchangeOffer
+        fields = ['offer_type', 'game', 'price', 'description']
+        labels = {
+            'offer_type': 'Offer Type',
+            'game': 'Game',
+            'price': 'Price',
+            'description': 'Description',
+        }
+
+
+class MakeOfferForm(ModelForm):
+    class Meta:
+        model = ExchangeOffer
+        fields = ['game', 'price', 'description']
+        labels = {
+                'game': 'Game',
+                'price': 'Price',
+                'description': 'Description',
+        }

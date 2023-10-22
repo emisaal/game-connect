@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Games</h1>
+    <ul>
+        {% for game in object_list %}
+            <li>{{ game.name }}</li>
+            <ul>
+                {% for article in game.article_set.all %}
+                    <li>
+                        <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+{% endblock %}

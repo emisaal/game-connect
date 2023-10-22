@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>My active offers</h1>
+
+    {% for offer in active_offers %}
+        <h2>{{ offer.get_offer_type_display }} - {{ offer.game.name }}</h2>
+        <p>Added: {{ offer.added }}</p>
+        <p>{{ offer.description }}</p>
+        {% if offer.price is not None %}
+            <p>Price: {{ offer.price }}</p>
+        {% endif %}
+        <div class="centered-button">
+            <a href="{% url 'offer_details' offer.offer_id %}" class="btn-primary">Details</a>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>My offer - {{ offer.get_offer_type_display }} - {{ offer.game }}</h1>
+    {% for customer in customers %}
+        <h2>{{ customer.customer }} - {{ customer.game }}</h2>
+        <p>Added: {{ customer.added }}</p>
+        <p>{{ customer.description }}</p>
+        {% if offer.price is not None %}
+            <p>Price: {{ customer.price }}</p>
+        {% endif %}
+        <div class="centered-button">
+            <button class="btn-primary">Accept</button>
+        </div>
+    {% endfor %}
+{% endblock %}

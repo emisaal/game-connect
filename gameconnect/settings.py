@@ -100,7 +100,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 try:
-    from gameconnect.local_settings import DATABASES
+    from gameconnect.local_settings import DATABASES, MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX
 except ModuleNotFoundError:
     print("Error in local_setting.py")
     exit(0)

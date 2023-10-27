@@ -141,10 +141,14 @@
         <li><a href="{%  url 'market' %}">Market</a></li>
         <li><a href="{%  url 'games' %}">Games</a></li>
         <li><a href="{%  url 'articles' %}">Articles</a></li>
-{#        <li><a href="{%  url 'register' %}">Register</a></li>#}
-{#        <li><a href="{%  url 'login' %}">Login</a></li>#}
-{#        <li><a href="{%  url 'logout' %}">Logout</a></li>#}
-
+    {% if user.is_authenticated %}
+        <li><a href="{%  url 'logout' %}">Logout</a></li>
+        <li>Welcome, {{ user.username }}!</li>
+    {% else %}
+        <li><a href="{%  url 'register' %}">Register</a></li>
+        <li><a href="{%  url 'login' %}">Login</a></li>
+        <li>Welcome, Guest!</li>
+    {% endif %}
     </ul>
     </nav>
     </header>
@@ -155,12 +159,11 @@
     </main>
 
     <section id="subscribe">
-    <h2>Subscribe to Our Newsletter</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="email" placeholder="Your Email">
-        <button type="submit" class="btn-primary">Subscribe</button>
-    </form>
+        <h2>Subscribe to Our Newsletter</h2>
+        <p>Be first to know about new exclusive articles, game exchange offers and more!</p>
+        <div class="centered-button">
+            <a href="{% url 'subscribe' %}" class="btn btn-primary">Subscribe</a>
+        </div>
     </section>
 
     <footer>

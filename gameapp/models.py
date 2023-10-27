@@ -54,10 +54,10 @@ class Subscribe(models.Model):
     Model for user subscriptions.
 
     Fields:
-    - user (OneToOneField): One-to-one relationship with the built-in User model.
+    - email(EmailField): email address
     - status (BooleanField): Subscription status (defaulted to False).
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.EmailField()
     status = models.BooleanField(default=False)
 
 

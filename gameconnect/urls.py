@@ -3,7 +3,7 @@ from django.urls import path
 
 from gameapp.views import (LoginView, LogoutView, RegisterView, UserPageView, MainView, GamesListView,
                            ArticlesListView, ArticleDetailsView, MarketListView, AddOfferView,
-                           MakeOfferView, OfferDetailsView)
+                           MakeOfferView, OfferDetailsView, SubscribeView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
+    path('subscribe/', SubscribeView.as_view(), name='subscribe'),
     path('user/<int:user_id>/', UserPageView.as_view(), name='user_page'),
     path('games/', GamesListView.as_view(), name='games'),
     path('articles/', ArticlesListView.as_view(), name='articles'),

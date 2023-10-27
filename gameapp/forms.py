@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
 from django.forms import ModelForm
 
-from gameapp.models import ExchangeOffer
+from gameapp.models import ExchangeOffer, Subscribe
 
 User = get_user_model()
 
@@ -49,4 +49,14 @@ class MakeOfferForm(ModelForm):
                 'game': 'Game',
                 'price': 'Price',
                 'description': 'Description',
+        }
+
+
+class SubscribeForm(ModelForm):
+    class Meta:
+        model = Subscribe
+        fields = ['email', 'status']
+        labels = {
+            'email': 'Email',
+            'status': 'Subscribe',
         }

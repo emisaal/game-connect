@@ -6,14 +6,14 @@
         <a href="{% url 'add_offer' %}" class="btn btn-primary">Add new offer</a>
     </div>
     {% for offer in object_list %}
-        <h2>{{ offer.get_offer_type_display }} - {{ offer.game.name }}</h2>
+        <h2>{{ offer.get_offer_type_display }} - {{ offer.game }}</h2>
         <p>Added: {{ offer.added }}</p>
         <p>{{ offer.description }}</p>
         {% if offer.price is not None %}
             <p>Price: {{ offer.price }}</p>
         {% endif %}
         <div class="centered-button">
-            <a href="{% url 'make_offer' offer.offer_id %}" class="btn-primary">Make an offer</a>
+            <a href="{% url 'make_offer' offer.id %}" class="btn-primary">Make an offer</a>
         </div>
     {% endfor %}
 {% endblock %}

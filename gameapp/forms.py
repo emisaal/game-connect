@@ -60,3 +60,7 @@ class MakeOfferForm(ModelForm):
         required=False,
         widget=forms.TextInput(attrs={'placeholder': '0.00'})
     )
+
+
+class AcceptForm(forms.Form):
+    customer_offer_id = forms.IntegerField(widget=forms.HiddenInput())

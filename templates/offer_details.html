@@ -1,16 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>My offer - {{ offer.get_offer_type_display }} - {{ offer.game }}</h1>
-    {% for customer in customers %}
-        <h2>{{ customer.customer }} - {{ customer.game }}</h2>
-        <p>Added: {{ customer.added }}</p>
-        <p>{{ customer.description }}</p>
-        {% if offer.price is not None %}
-            <p>Price: {{ customer.price }}</p>
-        {% endif %}
-        <div class="centered-button">
-            <button class="btn-primary">Accept</button>
-        </div>
-    {% endfor %}
+    <h1>{{ offer.get_offer_type_display }} - {{ offer.game }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Game</th>
+                <th>Description</th>
+                <th>Added</th>
+                <th>Status</th>
+                {% if offer.price is not None %}
+                    <th>Price</th>
+                {% endif %}
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.customer.username }}</td>
+                    <td>{{ customer.game_name }}</td>
+                    <td>{{ customer.description }}</td>
+                    <td>{{ customer.added }}</td>
+                    <td>{{ customer.get_status_display }}</td>
+                    {% if offer.price is not None %}
+                        <td>{{ customer.price }}</td>
+                    {% endif %}
+                    <td>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="customer_offer_id" value="{{ customer.id }}">
+                            <button type="submit" class="btn-primary">Accept</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

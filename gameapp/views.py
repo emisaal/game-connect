@@ -8,7 +8,7 @@ from django.views.generic import FormView, ListView
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
 
-from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm
+from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm
 from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
 from gameconnect import local_settings
 
@@ -141,11 +141,24 @@ class OfferDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     def get(self, request, offer_id):
-        offer = ExchangeOffer.objects.get(pk=offer_id)
-        customers = ExchangeOffer.objects.get(pk=offer_id)
-        return render(request, 'offer_details.html', {"offer": offer,
-                                                      "customers": customers})
+        offer = ExchangeOffer.objects.get(id=offer_id)
+        customers = CustomerOffer.objects.filter(exchange_offer_id=offer_id)
+        return render(request, 'offer_details.html', {"offer": offer, "customers": customers})
 
+    def post(self, request, offer_id):
+        form = AcceptForm(request.POST)
+        if form.is_valid():
+            customer_offer_id = form.cleaned_data.get('customer_offer_id')
+            customers = CustomerOffer.objects.filter(exchange_offer_id=offer_id)
+
+            for customer in customers:
+                if customer.id == customer_offer_id:
+                    customer.status = "A"
+                else:
+                    customer.status = "R"
+                customer.save()
+
+            return redirect('offer_details', offer_id=offer_id)
 
 class SubscribeView(View):
     template_name = 'subscribe.html'

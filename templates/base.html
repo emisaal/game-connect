@@ -54,6 +54,14 @@
             text-align: center;
             margin: 20px 0;
         }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table th, table td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
 
         #subscribe {
             background-color: #fff;
@@ -130,6 +138,7 @@
             display: inline-block;
             cursor: pointer;
         }
+
     </style>
 </head>
 <body>
@@ -142,6 +151,7 @@
         <li><a href="{%  url 'games' %}">Games</a></li>
         <li><a href="{%  url 'articles' %}">Articles</a></li>
     {% if user.is_authenticated %}
+        <li><a href="{%  url 'user_page' user_id=request.user.id %}">My Offers</a></li>
         <li><a href="{%  url 'logout' %}">Logout</a></li>
         <li>Welcome, {{ user.username }}!</li>
     {% else %}

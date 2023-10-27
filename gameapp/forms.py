@@ -30,15 +30,20 @@ class RegistrationForm(UserCreationForm):
 
 
 class AddOfferForm(ModelForm):
+
     class Meta:
         model = ExchangeOffer
         fields = ['offer_type', 'game', 'price', 'description']
         labels = {
             'offer_type': 'Offer Type',
             'game': 'Game',
-            'price': 'Price',
             'description': 'Description',
         }
+    price = forms.DecimalField(
+        label='Price (if applicable)',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Not applicable'})
+    )
 
 
 class MakeOfferForm(ModelForm):
@@ -49,14 +54,4 @@ class MakeOfferForm(ModelForm):
                 'game': 'Game',
                 'price': 'Price',
                 'description': 'Description',
-        }
-
-
-class SubscribeForm(ModelForm):
-    class Meta:
-        model = Subscribe
-        fields = ['email', 'status']
-        labels = {
-            'email': 'Email',
-            'status': 'Subscribe',
         }

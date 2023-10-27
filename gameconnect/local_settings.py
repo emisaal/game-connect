@@ -10,7 +10,8 @@ DATABASES = {
     }
 }
 
-# mailchimp api key: f80c5cfffd8a1452b5bfa39c402ff28b-us21
+# Mailchimp
 
 MAILCHIMP_API_KEY = 'f80c5cfffd8a1452b5bfa39c402ff28b-us21'
-MAILCHIMP_SERVER_PREFIX = 'us21'
+MAILCHIMP_DATA_CENTER = 'us21'
+MAILCHIMP_EMAIL_LIST_ID = "59a4114905"

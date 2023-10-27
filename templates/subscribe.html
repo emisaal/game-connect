@@ -4,12 +4,19 @@
     <section id="subscribe">
     <h2>Subscribe to Our Newsletter</h2>
         <p>Be first to know about new exclusive articles, game exchange offers and more!</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <div class="centered-button">
-            <button type="submit" class="btn btn-primary">Subscribe</button>
-        </div>
+        <form method="post" action="{% url 'subscribe' %}">
+          {% csrf_token %}
+            <input type="email" name="email" placeholder="Enter Email to Subscribe">
+              <div class="centered-button">
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+              </div>
+        </form>
+
+      {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
     </form>
     </section>
 {% endblock %}

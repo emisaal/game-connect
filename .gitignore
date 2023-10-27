@@ -1,0 +1,33 @@
+# Python/Django specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Secret keys and environment-specific settings
+*.env
+*.env.local
+
+# Development environment-specific directories
+venv/
+.vscode/
+.idea/
+*.iml
+
+# Log and temporary files
+*.log
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Media and static files (if not served from the repository)
+media/
+static/
+
+# Automated test output
+__coverage__/
+htmlcov/
+.tox/

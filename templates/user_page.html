@@ -15,4 +15,19 @@
             <a href="{% url 'offer_details' offer.id %}" class="btn-primary">Details</a>
         </div>
     {% endfor %}
+
+    <h1>My closed offers</h1>
+        {% for offer in inactive_offers %}
+        <h2>{{ offer.get_offer_type_display }} - {{ offer.game.name }}</h2>
+        <p>Owner: {{ offer.owner }}</p>
+        <p>Added: {{ offer.added }}</p>
+        <p>{{ offer.description }}</p>
+        {% if offer.price is not None %}
+            <p>Price: {{ offer.price }}</p>
+        {% endif %}
+            <div class="centered-button">
+            <a href="{% url 'offer_details' offer.id %}" class="btn-primary">Details</a>
+            </div>
+    {% endfor %}
+
 {% endblock %}

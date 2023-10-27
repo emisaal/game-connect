@@ -91,7 +91,9 @@ class UserPageView(LoginRequiredMixin, View):
 
     def get(self, request, user_id):
         active_offers = ExchangeOffer.objects.filter(owner=user_id, status=True)
-        return render(request, 'user_page.html', {"active_offers": active_offers})
+        inactive_offers = ExchangeOffer.objects.filter(owner=user_id, status=False)
+        return render(request, 'user_page.html', {"active_offers": active_offers,
+                                                  "inactive_offers": inactive_offers})
 
 
 class AddOfferView(LoginRequiredMixin, FormView):
@@ -148,16 +150,20 @@ class OfferDetailsView(LoginRequiredMixin, View):
     def post(self, request, offer_id):
         form = AcceptForm(request.POST)
         if form.is_valid():
+            offer = ExchangeOffer.objects.get(id=offer_id)
             customer_offer_id = form.cleaned_data.get('customer_offer_id')
             customers = CustomerOffer.objects.filter(exchange_offer_id=offer_id)
 
-            for customer in customers:
-                if customer.id == customer_offer_id:
-                    customer.status = "A"
-                else:
-                    customer.status = "R"
-                customer.save()
+            if offer.status:
+                for customer in customers:
+                    if customer.id == customer_offer_id:
+                        customer.status = "A"
+                    else:
+                        customer.status = "R"
+                    customer.save()
 
+                offer.status = False
+                offer.save()
             return redirect('offer_details', offer_id=offer_id)
 
 class SubscribeView(View):

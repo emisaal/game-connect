@@ -5,7 +5,7 @@
     <table>
         <thead>
             <tr>
-                <th>Username</th>
+                <th>Email</th>
                 <th>Game</th>
                 <th>Description</th>
                 <th>Added</th>
@@ -19,7 +19,7 @@
         <tbody>
             {% for customer in customers %}
                 <tr>
-                    <td>{{ customer.customer.username }}</td>
+                    <td>{{ customer.customer.email }}</td>
                     <td>{{ customer.game_name }}</td>
                     <td>{{ customer.description }}</td>
                     <td>{{ customer.added }}</td>

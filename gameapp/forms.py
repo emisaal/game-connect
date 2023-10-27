@@ -10,10 +10,12 @@ User = get_user_model()
 
 
 class LoginForm(forms.Form):
+    """ A form for user login, with username and password fields. """
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self):
+        """ A method for cleaning and validating form data, and authenticating the user. """
         cd = super().clean()
         username = cd.get('username')
         password = cd.get('password')
@@ -24,12 +26,15 @@ class LoginForm(forms.Form):
 
 
 class RegistrationForm(UserCreationForm):
+    """ A form for user registration, inheriting from UserCreationForm. """
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
 
 class AddOfferForm(ModelForm):
+    """ A form for adding exchange offers, inheriting from ModelForm,
+    used to create ExchangeOffer instances. """
 
     class Meta:
         model = ExchangeOffer
@@ -47,6 +52,8 @@ class AddOfferForm(ModelForm):
 
 
 class MakeOfferForm(ModelForm):
+    """ A form for making an offer on an existing exchange offer,
+    inheriting from ModelForm, used to create CustomerOffer instances. """
     class Meta:
         model = CustomerOffer
         fields = ['game_name', 'price', 'description']
@@ -63,4 +70,5 @@ class MakeOfferForm(ModelForm):
 
 
 class AcceptForm(forms.Form):
+    """ A form for accepting an offer, specifically capturing the customer_offer_id. """
     customer_offer_id = forms.IntegerField(widget=forms.HiddenInput())

@@ -19,6 +19,7 @@ list_id = local_settings.MAILCHIMP_EMAIL_LIST_ID
 
 
 class LoginView(FormView):
+    """ A class-based view for handling user login. """
     template_name = "login.html"
     form_class = LoginForm
     success_url = reverse_lazy('main')
@@ -29,12 +30,14 @@ class LoginView(FormView):
 
 
 class LogoutView(View):
+    """ A class-based view for logging out a user. """
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('login')
 
 
 class RegisterView(View):
+    """ A class-based view for user registration. """
     def get(self, request):
         form = RegistrationForm()
         return render(request, 'register.html', {'form': form})
@@ -48,6 +51,7 @@ class RegisterView(View):
 
 
 class MainView(View):
+    """ A class-based view for the main page. """
     def get(self, request):
         game = Game.objects.latest('added')
         article = Article.objects.latest('added')
@@ -56,16 +60,19 @@ class MainView(View):
 
 
 class GamesListView(ListView):
+    """ A class-based view for listing games. """
     template_name = "games.html"
     model = Game
 
 
 class ArticlesListView(ListView):
+    """ A class-based view for listing articles. """
     template_name = "articles.html"
     model = Article
 
 
 class ArticleDetailsView(LoginRequiredMixin, View):
+    """ A class-based view for displaying article details, with login requirement. """
     login_url = reverse_lazy('login')
 
     def get(self, request, slug):
@@ -75,6 +82,7 @@ class ArticleDetailsView(LoginRequiredMixin, View):
 
 
 class MarketListView(ListView):
+    """ A class-based view for listing exchange offers in the market. """
     template_name = "market.html"
     model = ExchangeOffer
     ordering = ['added']
@@ -87,6 +95,7 @@ class MarketListView(ListView):
 
 
 class UserPageView(LoginRequiredMixin, View):
+    """ A class-based view for displaying a user's page, with login requirement. """
     login_url = reverse_lazy('login')
 
     def get(self, request, user_id):
@@ -97,6 +106,7 @@ class UserPageView(LoginRequiredMixin, View):
 
 
 class AddOfferView(LoginRequiredMixin, FormView):
+    """  A class-based view for adding exchange offers, with login requirement. """
     login_url = reverse_lazy('login')
     template_name = "add_offer.html"
     form_class = AddOfferForm
@@ -116,6 +126,7 @@ class AddOfferView(LoginRequiredMixin, FormView):
 
 
 class MakeOfferView(LoginRequiredMixin, FormView):
+    """ A class-based view for making an offer on an existing exchange offer, with login requirement. """
     login_url = reverse_lazy('login')
     template_name = "make_offer.html"
     form_class = MakeOfferForm
@@ -140,6 +151,7 @@ class MakeOfferView(LoginRequiredMixin, FormView):
 
 
 class OfferDetailsView(LoginRequiredMixin, View):
+    """ A class-based view for displaying the details of an exchange offer, with login requirement. """
     login_url = reverse_lazy('login')
 
     def get(self, request, offer_id):
@@ -166,7 +178,9 @@ class OfferDetailsView(LoginRequiredMixin, View):
                 offer.save()
             return redirect('offer_details', offer_id=offer_id)
 
+
 class SubscribeView(View):
+    """ A class-based view for handling email subscriptions to a mailing list. """
     template_name = 'subscribe.html'
 
     def get(self, request):
@@ -179,10 +193,7 @@ class SubscribeView(View):
         return render(request, self.template_name)
 
     def subscribe(self, email):
-        """
-         Contains code handling the communication to the mailchimp api
-         to create a contact/member in an audience/list.
-        """
+        """ A method for subscribing an email to a mailing list using the Mailchimp API. """
 
         mailchimp = Client()
         mailchimp.set_config({

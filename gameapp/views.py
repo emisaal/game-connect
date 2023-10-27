@@ -9,7 +9,7 @@ from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
 
 from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm
-from gameapp.models import Game, Article, ExchangeOffer
+from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
 from gameconnect import local_settings
 
 # Mailchimp Settings
@@ -106,27 +106,35 @@ class AddOfferView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         user_id = self.request.user.id
 
-        exchange_offer = form.save(commit=False)
-        exchange_offer.owner_id = user_id
-        exchange_offer.save()
+        new_offer = form.save(commit=False)
+        new_offer.owner_id = user_id
+        new_offer.save()
 
         return redirect('market')
 
 
-class MakeOfferView(LoginRequiredMixin, View):
+class MakeOfferView(LoginRequiredMixin, FormView):
     login_url = reverse_lazy('login')
-    template = "make_offer.html"
-    form = MakeOfferForm
+    template_name = "make_offer.html"
+    form_class = MakeOfferForm
 
-    def get(self, request, *args, **kwargs):
-        form = self.form
-        return render(request, self.template,  {"form": form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        offer_id = self.kwargs.get('offer_id')
+        context['offer_id'] = offer_id
+        context['offer'] = ExchangeOffer.objects.get(id=offer_id)
+        return context
 
-    def post(self, request, *args, **kwargs):
-        form = self.form(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('market')
+    def form_valid(self, form):
+        offer_id = self.kwargs.get('offer_id')
+        customer = self.request.user.id
+
+        new_offer = form.save(commit=False)
+        new_offer.exchange_offer_id = offer_id
+        new_offer.customer_id = customer
+        new_offer.save()
+
+        return redirect('market')
 
 
 class OfferDetailsView(LoginRequiredMixin, View):

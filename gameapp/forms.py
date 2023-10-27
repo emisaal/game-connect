@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
 from django.forms import ModelForm
 
-from gameapp.models import ExchangeOffer, Subscribe
+from gameapp.models import ExchangeOffer, CustomerOffer
 
 User = get_user_model()
 
@@ -42,16 +42,21 @@ class AddOfferForm(ModelForm):
     price = forms.DecimalField(
         label='Price (if applicable)',
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Not applicable'})
+        widget=forms.TextInput(attrs={'placeholder': '0.00'})
     )
 
 
 class MakeOfferForm(ModelForm):
     class Meta:
-        model = ExchangeOffer
-        fields = ['game', 'price', 'description']
+        model = CustomerOffer
+        fields = ['game_name', 'price', 'description']
         labels = {
-                'game': 'Game',
-                'price': 'Price',
+                'game_name': 'Game',
                 'description': 'Description',
         }
+
+    price = forms.DecimalField(
+        label='Price (if applicable)',
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': '0.00'})
+    )

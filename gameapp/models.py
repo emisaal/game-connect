@@ -98,7 +98,7 @@ class CustomerOffer(models.Model):
     """
     exchange_offer = models.ForeignKey(ExchangeOffer, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    game_name = models.ForeignKey(Game, on_delete=models.CASCADE, null=True)
+    game_name = models.ForeignKey(Game, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     description = models.TextField()
     status = models.CharField(max_length=20, default="P", choices=STATUS_CHOICES)

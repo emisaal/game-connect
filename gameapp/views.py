@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -99,6 +100,9 @@ class UserPageView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     def get(self, request, user_id):
+        if user_id != request.user.id:
+            raise Http404
+
         active_offers = ExchangeOffer.objects.filter(owner=user_id, status=True)
         inactive_offers = ExchangeOffer.objects.filter(owner=user_id, status=False)
         return render(request, 'user_page.html', {"active_offers": active_offers,
@@ -155,7 +159,14 @@ class OfferDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     def get(self, request, offer_id):
-        offer = ExchangeOffer.objects.get(id=offer_id)
+        try:
+            offer = ExchangeOffer.objects.get(id=offer_id)
+        except ExchangeOffer.DoesNotExist:
+            raise Http404
+
+        if offer.owner != request.user:
+            raise Http404
+
         customers = CustomerOffer.objects.filter(exchange_offer_id=offer_id)
         return render(request, 'offer_details.html', {"offer": offer, "customers": customers})
 

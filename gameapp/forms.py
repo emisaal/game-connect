@@ -1,9 +1,9 @@
+from captcha.fields import CaptchaField
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
 from django.forms import ModelForm
-from captcha.fields import CaptchaField
 from gameapp.models import ExchangeOffer, CustomerOffer
 
 User = get_user_model()

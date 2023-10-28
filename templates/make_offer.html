@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Make an offer</h2>
+  <h1>Owner's offer - {{ offer.get_offer_type_display }} a game</h1>
     <p> Offer: {{ offer.get_offer_type_display }} - {{ offer.game }}</p>
     <p> Owner: {{ offer.owner.username }}</p>
     {% if offer.price is not None %}
         <p>Price: {{ offer.price }}</p>
     {% endif %}
     <br>
+    {% if offer.offer_type == 'S' %}
+    <h1>Your offer - Buy a game</h1>
+    {% elif offer.offer_type == 'B' %}
+        <h1>Your offer - Sell a game</h1>
+    {% else %}
+        <h1>Your offer - Propose a game for exchange</h1>
+    {% endif %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

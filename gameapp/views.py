@@ -148,6 +148,13 @@ class MakeOfferView(LoginRequiredMixin, FormView):
     template_name = "make_offer.html"
     form_class = MakeOfferForm
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        offer_id = self.kwargs.get('offer_id')
+        selected_game = ExchangeOffer.objects.get(id=offer_id)
+        form.fields['game_name'].initial = selected_game.game
+        return form
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         offer_id = self.kwargs.get('offer_id')

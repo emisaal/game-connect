@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -200,6 +201,7 @@ class SubscribeView(View):
     def post(self, request):
         email = request.POST['email']
         self.subscribe(email)
+        self.send_welcome_email(email)
         messages.success(request, "Email received. Thank You!")
         return render(request, self.template_name)
 
@@ -221,3 +223,13 @@ class SubscribeView(View):
             mailchimp.lists.add_list_member(list_id, member_info)
         except ApiClientError as error:
             print("An exception occurred: {}".format(error.text))
+
+    def send_welcome_email(self, email):
+        """ Send a welcome email to the new subscribed user. """
+        subject, from_email, to = "Welcome to Our Mailing List", "emistrij@gmail.com", email
+        text_content = "Thank you for subscribing to our mailing list. We are excited to have you on board!"
+        html_content = "<p>Thank you for subscribing to our mailing list. We are excited to have you on board!</p>"
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+

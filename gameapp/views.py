@@ -87,7 +87,7 @@ class MarketListView(ListView):
     """ A class-based view for listing exchange offers in the market. """
     template_name = "market.html"
     model = ExchangeOffer
-    ordering = ['added']
+    ordering = ['-added']
 
     def get_queryset(self):
         offers = super().get_queryset()
@@ -196,7 +196,7 @@ class OfferDetailsView(LoginRequiredMixin, View):
                         customer.status = "A"
                         offer_details = offer.get_offer_type_display() + "-" + str(offer.game)
                         notification = (f"User {offer.owner.username} has accepted your offer for {offer_details}. Please "
-                                        f"reach out ot him via email {offer.owner.email}")
+                                        f"reach out ot them via email {offer.owner.email}")
                         Notification.objects.create(offer=customer, description=notification)
                     else:
                         customer.status = "R"

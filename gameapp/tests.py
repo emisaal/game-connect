@@ -1,3 +1,4 @@
+from captcha.models import CaptchaStore
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -191,6 +192,9 @@ def test_add_offer_view_post(client, user):
         'price': 10.0,
         'description': 'Offer Description',
     }
+    captcha = CaptchaStore.objects.create(challenge="test-challenge", response="test-response")
+    data['captcha_0'] = captcha.hashkey
+    data['captcha_1'] = "test-response"
 
     response = client.post(reverse('add_offer'), data=data)
     assert response.status_code == 302
@@ -201,6 +205,10 @@ def test_add_offer_view_post(client, user):
 def test_make_offer_view_get(client, user, exchange_offer):
     """Test the GET request to the MakeOfferView."""
     offer_id = exchange_offer.id
+    captcha = CaptchaStore.objects.create(challenge="test-challenge", response="test-response")
+    data['captcha_0'] = captcha.hashkey
+    data['captcha_1'] = "test-response"
+
     response = client.get(reverse('make_offer', args=[offer_id]))
     assert response.status_code == 200
 

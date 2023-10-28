@@ -2,18 +2,10 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.contrib.auth.models import User
 import pytest
-
 from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
+from conftest import user, exchange_offer
 
 User = get_user_model()
-
-
-@pytest.fixture
-def user(client):
-    """Create a test user and log them in."""
-    user = User.objects.create_user(username='testuser', password='validpassword123!@#')
-    client.login(username='testuser', password='validpassword123!@#')
-    return user
 
 
 @pytest.mark.django_db
@@ -203,15 +195,6 @@ def test_add_offer_view_post(client, user):
     response = client.post(reverse('add_offer'), data=data)
     assert response.status_code == 302
     assert ExchangeOffer.objects.filter(description='Offer Description').exists()
-
-
-@pytest.fixture
-def exchange_offer():
-    """ Create a sample exchange offer """
-    game = Game.objects.create(name="Game 1", description="Description for Game 1")
-    offer = ExchangeOffer.objects.create(owner=User.objects.create(username='user1'), offer_type='S', game=game,
-                                         price=10.0, description='Offer 1', status=True)
-    return offer
 
 
 @pytest.mark.django_db

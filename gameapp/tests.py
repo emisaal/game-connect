@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 import pytest
 
-from gameapp.models import Game, Article, ExchangeOffer
+from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
 
 User = get_user_model()
 
@@ -41,10 +41,8 @@ def test_logout_view(client):
     client.login(username=user_data['username'], password=user_data['password'])
 
     response = client.get(reverse('logout'))
-
     assert response.status_code == 302
     assert response.url == reverse('login')
-
     session = client.session
     assert session.get('_auth_user_id') is None
 
@@ -88,7 +86,6 @@ def test_main_view(client):
                                          offer_type="S", game=game, price=9.99, description="Sample Offer Description")
 
     response = client.get(reverse('main'))
-
     assert response.status_code == 200
     assert game.name.encode() in response.content
     assert article.title.encode() in response.content
@@ -103,7 +100,6 @@ def test_games_list_view(client):
     game2 = Game.objects.create(name="Game 2", description="Description for Game 2")
 
     response = client.get(reverse('games'))
-
     assert response.status_code == 200
     assert game1.name.encode() in response.content
     assert game2.name.encode() in response.content
@@ -131,7 +127,6 @@ def test_article_details_view(client, user):
     article = Article.objects.create(slug="article-1", game=game, title="Article 1", content="Content for Article 1")
 
     response = client.get(reverse('article_detail', args=['article-1']))
-
     assert response.status_code == 200
     assert article.title.encode() in response.content
 
@@ -144,7 +139,6 @@ def test_article_details_view_requires_login(client):
     Article.objects.create(slug="article-1", game_id="1", title="Article 1", content="Content for Article 1")
 
     response = client.get(reverse('article_detail', args=['article-1']))
-
     assert response.status_code == 302
     assert '/login/' in response.url
 
@@ -164,7 +158,6 @@ def test_market_list_view(client, user):
                                                   description="Offer 4", status=False)
 
     response = client.get(reverse('market'))
-
     assert response.status_code == 200
     assert offer1.description.encode() in response.content
     assert offer2.description.encode() in response.content
@@ -184,8 +177,64 @@ def test_user_page_view(client, user):
                                           price=5.0, description="Offer 3", status=True)
 
     response = client.get(reverse('user_page', args=[user.id]))
-
     assert response.status_code == 200
     assert offer1.description.encode() in response.content
     assert offer2.description.encode() in response.content
     assert offer3.description.encode() not in response.content
+
+
+@pytest.mark.django_db
+def test_add_offer_view_get(client, user):
+    """Test the GET request to the AddOfferView."""
+    response = client.get(reverse('add_offer'))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_add_offer_view_post(client, user):
+    """Test the POST request to the AddOfferView with valid form data."""
+    data = {
+        'offer_type': 'S',
+        'game': Game.objects.create(name="Game 1", description="Description for Game 1").pk,
+        'price': 10.0,
+        'description': 'Offer Description',
+    }
+
+    response = client.post(reverse('add_offer'), data=data)
+    assert response.status_code == 302
+    assert ExchangeOffer.objects.filter(description='Offer Description').exists()
+
+
+#######################
+@pytest.fixture
+def exchange_offer():
+    """ Create a sample exchange offer """
+    game = Game.objects.create(name="Game 1", description="Description for Game 1")
+    offer = ExchangeOffer.objects.create(owner=User.objects.create(username='user1'), offer_type='S', game=game,
+                                         price=10.0, description='Offer 1', status=True)
+    return offer
+
+
+@pytest.mark.django_db
+def test_make_offer_view_get(client, user, exchange_offer):
+    """Test the GET request to the MakeOfferView."""
+    offer_id = exchange_offer.id
+    response = client.get(reverse('make_offer', args=[offer_id]))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_make_offer_view_post(client, user, exchange_offer):
+    """Test the POST request to the MakeOfferView with valid form data."""
+    offer_id = exchange_offer.id
+    data = {
+        'game_name': Game.objects.create(name="Game 2", description="Description for Game 2").pk,
+        'price': 15.0,
+        'description': 'Customer Offer Description',
+    }
+
+    response = client.post(reverse('make_offer', args=[offer_id]), data=data)
+
+    assert response.status_code == 302
+    assert CustomerOffer.objects.filter(description='Customer Offer Description').exists()
+

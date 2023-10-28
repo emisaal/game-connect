@@ -205,7 +205,6 @@ def test_add_offer_view_post(client, user):
     assert ExchangeOffer.objects.filter(description='Offer Description').exists()
 
 
-#######################
 @pytest.fixture
 def exchange_offer():
     """ Create a sample exchange offer """
@@ -238,3 +237,35 @@ def test_make_offer_view_post(client, user, exchange_offer):
     assert response.status_code == 302
     assert CustomerOffer.objects.filter(description='Customer Offer Description').exists()
 
+
+@pytest.mark.django_db
+def test_make_offer_view_get(client, user, exchange_offer):
+    """Test the GET request to the MakeOfferView."""
+    offer_id = exchange_offer.id
+    response = client.get(reverse('make_offer', args=[offer_id]))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_make_offer_view_post(client, user, exchange_offer):
+    """Test the POST request to the MakeOfferView with valid form data."""
+    offer_id = exchange_offer.id
+    data = {
+        'game_name': Game.objects.create(name="Game 2", description="Description for Game 2").pk,
+        'price': 15.0,
+        'description': 'Customer Offer Description',
+    }
+
+    response = client.post(reverse('make_offer', args=[offer_id]), data=data)
+
+    assert response.status_code == 302
+    assert CustomerOffer.objects.filter(
+        description='Customer Offer Description').exists()
+
+
+@pytest.mark.django_db
+def test_subscribe_view_get(client):
+    """Test the GET request to the SubscribeView."""
+    response = client.get(reverse('subscribe'))
+
+    assert response.status_code == 200

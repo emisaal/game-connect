@@ -49,18 +49,6 @@ class Article(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
 
-class Subscribe(models.Model):
-    """
-    Model for user subscriptions.
-
-    Fields:
-    - email(EmailField): email address
-    - status (BooleanField): Subscription status (defaulted to False).
-    """
-    email = models.EmailField()
-    status = models.BooleanField(default=False)
-
-
 class ExchangeOffer(models.Model):
     """
     Model for game exchange offers.

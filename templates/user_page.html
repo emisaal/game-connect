@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>My active offers</h1>
+    <h1>My notifications</h1>
+    {% for notification in notifications %}
+        {% if notification.status %}
+        <p>{{ notification.description }}</p>
+        {% else %}
+            <p style="font-weight: bold">{{ notification.description }}</p>
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="notification_id" value="{{ notification.id }}">
+                <button type="submit" class="btn-primary">Mark as read</button>
+            </form>
+        {% endif %}
+    {% endfor %}
 
+    <h1>My active offers</h1>
     {% for offer in active_offers %}
         <h2>{{ offer.get_offer_type_display }} - {{ offer.game.name }}</h2>
         <p>Owner: {{ offer.owner }}</p>

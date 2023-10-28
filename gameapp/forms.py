@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
 from django.forms import ModelForm
-
+from captcha.fields import CaptchaField
 from gameapp.models import ExchangeOffer, CustomerOffer
 
 User = get_user_model()
@@ -35,6 +35,7 @@ class RegistrationForm(UserCreationForm):
 class AddOfferForm(ModelForm):
     """ A form for adding exchange offers, inheriting from ModelForm,
     used to create ExchangeOffer instances. """
+    captcha = CaptchaField()
 
     class Meta:
         model = ExchangeOffer
@@ -54,6 +55,8 @@ class AddOfferForm(ModelForm):
 class MakeOfferForm(ModelForm):
     """ A form for making an offer on an existing exchange offer,
     inheriting from ModelForm, used to create CustomerOffer instances. """
+    captcha = CaptchaField()
+
     class Meta:
         model = CustomerOffer
         fields = ['game_name', 'price', 'description']
@@ -72,3 +75,8 @@ class MakeOfferForm(ModelForm):
 class AcceptForm(forms.Form):
     """ A form for accepting an offer, specifically capturing the customer_offer_id. """
     customer_offer_id = forms.IntegerField(widget=forms.HiddenInput())
+
+
+class NotificationForm(forms.Form):
+    """A form for marking notifications as read"""
+    notification_id = forms.IntegerField(widget=forms.HiddenInput())

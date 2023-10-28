@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.urls import path
-
+from django.urls import path, include
+from captcha import urls as captcha_urls
 from gameapp.views import (LoginView, LogoutView, RegisterView, UserPageView, MainView, GamesListView,
                            ArticlesListView, ArticleDetailsView, MarketListView, AddOfferView,
                            MakeOfferView, OfferDetailsView, SubscribeView)
@@ -20,4 +20,5 @@ urlpatterns = [
     path('market/add_offer/', AddOfferView.as_view(), name='add_offer'),
     path('market/make_offer/<int:offer_id>/', MakeOfferView.as_view(), name='make_offer'),
     path('market/offer_details/<int:offer_id>/', OfferDetailsView.as_view(), name='offer_details'),
+    path('captcha/', include(captcha_urls)),
 ]

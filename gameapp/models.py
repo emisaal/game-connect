@@ -91,3 +91,10 @@ class CustomerOffer(models.Model):
     description = models.TextField()
     status = models.CharField(max_length=20, default="P", choices=STATUS_CHOICES)
     added = models.DateTimeField(auto_now_add=True)
+
+
+class Notification(models.Model):
+    """Model for accepted offers notifications"""
+    offer = models.ForeignKey(CustomerOffer, on_delete=models.CASCADE)
+    description = models.TextField()
+    status = models.BooleanField(default=False)

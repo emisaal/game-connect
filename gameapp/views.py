@@ -10,8 +10,8 @@ from django.views.generic import FormView, ListView
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
 
-from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm
-from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
+from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm
+from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer, Notification
 from gameconnect import local_settings
 
 # Mailchimp Settings
@@ -104,10 +104,22 @@ class UserPageView(LoginRequiredMixin, View):
         if user_id != request.user.id:
             raise Http404
 
+        notifications = Notification.objects.filter(offer__customer=user_id)
         active_offers = ExchangeOffer.objects.filter(owner=user_id, status=True)
         inactive_offers = ExchangeOffer.objects.filter(owner=user_id, status=False)
-        return render(request, 'user_page.html', {"active_offers": active_offers,
-                                                  "inactive_offers": inactive_offers})
+        return render(request, 'user_page.html', {
+            "active_offers": active_offers, "inactive_offers": inactive_offers, "notifications": notifications})
+
+    def post(self, request, user_id):
+        form = NotificationForm(request.POST)
+        if form.is_valid():
+            notification_id = form.cleaned_data['notification_id']
+            notification = Notification.objects.get(id=notification_id)
+            notification.status = True
+            notification.save()
+
+        return redirect('user_page', user_id=request.user.id)
+
 
 
 class AddOfferView(LoginRequiredMixin, FormView):
@@ -182,6 +194,10 @@ class OfferDetailsView(LoginRequiredMixin, View):
                 for customer in customers:
                     if customer.id == customer_offer_id:
                         customer.status = "A"
+                        offer_details = offer.get_offer_type_display() + "-" + str(offer.game)
+                        notification = (f"User {offer.owner.username} has accepted your offer for {offer_details}. Please "
+                                        f"reach out ot him via email {offer.owner.email}")
+                        Notification.objects.create(offer=customer, description=notification)
                     else:
                         customer.status = "R"
                     customer.save()

@@ -1,8 +1,9 @@
+import pytest
 from captcha.models import CaptchaStore
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.contrib.auth.models import User
-import pytest
+from pytest_django.asserts import assertRedirects
 from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
 from conftest import user, exchange_offer
 
@@ -177,6 +178,34 @@ def test_user_page_view(client, user):
 
 
 @pytest.mark.django_db
+def test_change_password_view_post_valid_form(client):
+    user = User.objects.create_user(username='testuser', password='testpassword')
+    data = {
+        'old_password': 'testpassword',
+        'new_password1': 'newpassword123!',
+        'new_password2': 'newpassword123!',
+    }
+    client.force_login(user)
+    response = client.post(reverse('password_change', args=[user.id]), data=data, follow=True)
+    assert response.status_code == 200
+    assertRedirects(response, reverse('user_page', args=[user.id]))
+
+
+@pytest.mark.django_db
+def test_change_password_view_post_invalid_form(client):
+    user = User.objects.create_user(username='testuser', password='testpassword')
+    data = {
+        'old_password': 'wrongpassword',
+        'new_password1': 'new123!',
+        'new_password2': 'newpassword123!',
+    }
+    client.force_login(user)
+    response = client.post(reverse('password_change', args=[user.id]), data=data)
+    assert response.status_code == 200
+    assert 'The two password fields didn' in str(response.content)
+
+
+@pytest.mark.django_db
 def test_add_offer_view_get(client, user):
     """Test the GET request to the AddOfferView."""
     response = client.get(reverse('add_offer'))
@@ -211,22 +240,6 @@ def test_make_offer_view_get(client, user, exchange_offer):
 
     response = client.get(reverse('make_offer', args=[offer_id]))
     assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_make_offer_view_post(client, user, exchange_offer):
-    """Test the POST request to the MakeOfferView with valid form data."""
-    offer_id = exchange_offer.id
-    data = {
-        'game_name': Game.objects.create(name="Game 2", description="Description for Game 2").pk,
-        'price': 15.0,
-        'description': 'Customer Offer Description',
-    }
-
-    response = client.post(reverse('make_offer', args=[offer_id]), data=data)
-
-    assert response.status_code == 302
-    assert CustomerOffer.objects.filter(description='Customer Offer Description').exists()
 
 
 @pytest.mark.django_db

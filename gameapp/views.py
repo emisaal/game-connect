@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -90,9 +91,7 @@ class MarketListView(ListView):
     ordering = ['-added']
 
     def get_queryset(self):
-        offers = super().get_queryset()
-        active_offers = offers.filter(status=True)
-
+        active_offers = ExchangeOffer.objects.filter(status=True)
         return active_offers
 
 
@@ -120,6 +119,23 @@ class UserPageView(LoginRequiredMixin, View):
 
         return redirect('user_page', user_id=request.user.id)
 
+
+class ChangePasswordView(View):
+    template_name = 'change_password.html'
+
+    def get(self, request, user_id):
+        if user_id != request.user.id:
+            raise Http404
+        form = PasswordChangeForm(request.user)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, user_id):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, request.user)
+            return redirect('user_page', user_id)
+        return render(request, self.template_name, {'form': form})
 
 
 class AddOfferView(LoginRequiredMixin, FormView):

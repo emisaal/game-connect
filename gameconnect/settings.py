@@ -101,12 +101,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 try:
-    from gameconnect.local_settings import DATABASES, MAILCHIMP_API_KEY, MAILCHIMP_EMAIL_LIST_ID, MAILCHIMP_DATA_CENTER, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, MAILCHIMP_TRANSACTIONAL_API_KEY
+    from gameconnect.local_settings import DATABASES, MAILCHIMP_API_KEY, MAILCHIMP_EMAIL_LIST_ID, MAILCHIMP_DATA_CENTER, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, MAILCHIMP_TRANSACTIONAL_API_KEY, EMAIL_BACKEND, EMAIL_HOST, EMAIL_PORT, EMAIL_USE_TLS
 except ModuleNotFoundError:
     print("Error in local_setting.py")
     exit(0)
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+

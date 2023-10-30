@@ -3,7 +3,7 @@ from django.urls import path, include
 from captcha import urls as captcha_urls
 from gameapp.views import (LoginView, LogoutView, RegisterView, UserPageView, MainView, GamesListView,
                            ArticlesListView, ArticleDetailsView, MarketListView, AddOfferView,
-                           MakeOfferView, OfferDetailsView, SubscribeView)
+                           MakeOfferView, OfferDetailsView, SubscribeView, ChangePasswordView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,6 +13,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('subscribe/', SubscribeView.as_view(), name='subscribe'),
     path('user/<int:user_id>/', UserPageView.as_view(), name='user_page'),
+    path('user/<int:user_id>/password/', ChangePasswordView.as_view(), name='password_change'),
     path('games/', GamesListView.as_view(), name='games'),
     path('articles/', ArticlesListView.as_view(), name='articles'),
     path('articles/<slug:slug>/', ArticleDetailsView.as_view(), name='article_detail'),

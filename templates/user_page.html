@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+        <a href="{% url 'password_change' user.id %}" class="btn-primary">Change Password</a>
+
     <h1>My notifications</h1>
     {% for notification in notifications %}
         {% if notification.status %}

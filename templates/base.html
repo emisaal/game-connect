@@ -151,7 +151,7 @@
         <li><a href="{%  url 'games' %}">Games</a></li>
         <li><a href="{%  url 'articles' %}">Articles</a></li>
     {% if user.is_authenticated %}
-        <li><a href="{%  url 'user_page' user_id=request.user.id %}">My Offers</a></li>
+        <li><a href="{%  url 'user_page' user_id=request.user.id %}">User Page</a></li>
         <li><a href="{%  url 'logout' %}">Logout</a></li>
         <li>Welcome, {{ user.username }}!</li>
     {% else %}

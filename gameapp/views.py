@@ -88,10 +88,9 @@ class MarketListView(ListView):
     """ A class-based view for listing exchange offers in the market. """
     template_name = "market.html"
     model = ExchangeOffer
-    ordering = ['-added']
 
     def get_queryset(self):
-        active_offers = ExchangeOffer.objects.filter(status=True)
+        active_offers = ExchangeOffer.objects.filter(status=True).order_by('-added')
         return active_offers
 
 
@@ -221,6 +220,8 @@ class OfferDetailsView(LoginRequiredMixin, View):
                         notification = (f"User {offer.owner.username} has accepted your offer for {offer_details}. Please "
                                         f"reach out ot them via email {offer.owner.email}")
                         Notification.objects.create(offer=customer, description=notification)
+                        self.send_notification_email(customer.customer.email, notification)
+
                     else:
                         customer.status = "R"
                     customer.save()
@@ -228,6 +229,14 @@ class OfferDetailsView(LoginRequiredMixin, View):
                 offer.status = False
                 offer.save()
             return redirect('offer_details', offer_id=offer_id)
+
+    def send_notification_email(self, email, text_content):
+        """ Send an email when offer is accepted by owner. """
+        subject, from_email, to = "You offer was accepted", "emistrij@gmail.com", email
+        html_content = f"<p>{text_content}</p>"
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
 
 
 class SubscribeView(View):
@@ -271,4 +280,3 @@ class SubscribeView(View):
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
-

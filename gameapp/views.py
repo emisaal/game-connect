@@ -1,17 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, ListView
+from django.views.generic import FormView, ListView, CreateView
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
-
-from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm
+from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm, \
+    NewGameForm, NewArticleForm
 from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer, Notification
 from gameconnect import local_settings
 
@@ -34,6 +34,7 @@ class LoginView(FormView):
 
 class LogoutView(View):
     """ A class-based view for logging out a user. """
+
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('login')
@@ -41,6 +42,7 @@ class LogoutView(View):
 
 class RegisterView(View):
     """ A class-based view for user registration. """
+
     def get(self, request):
         form = RegistrationForm()
         return render(request, 'register.html', {'form': form})
@@ -55,6 +57,7 @@ class RegisterView(View):
 
 class MainView(View):
     """ A class-based view for the main page. """
+
     def get(self, request):
         game = Game.objects.latest('added')
         article = Article.objects.latest('added')
@@ -102,7 +105,7 @@ class UserPageView(LoginRequiredMixin, View):
         if user_id != request.user.id:
             raise Http404
 
-        notifications = Notification.objects.filter(offer__customer=user_id)
+        notifications = Notification.objects.filter(user=user_id).order_by('-id')
         active_offers = ExchangeOffer.objects.filter(owner=user_id, status=True)
         inactive_offers = ExchangeOffer.objects.filter(owner=user_id, status=False)
         return render(request, 'user_page.html', {
@@ -181,12 +184,30 @@ class MakeOfferView(LoginRequiredMixin, FormView):
         offer_id = self.kwargs.get('offer_id')
         customer = self.request.user.id
 
+        # save new offer to CustomerOffer
         new_offer = form.save(commit=False)
         new_offer.exchange_offer_id = offer_id
         new_offer.customer_id = customer
         new_offer.save()
 
+        # send email notification to offer owner
+        owner = ExchangeOffer.objects.get(id=offer_id)
+        text_content = (f"New offer was made to Your listing {owner.get_offer_type_display()} - {owner.game}, please "
+                        f"go to Your User Page - My active offers - Details to review it.")
+        self.send_notification_email(owner.owner.email, text_content)
+
+        # create notification for offer owner
+        notification = f"New offer was made to Your listing {owner.get_offer_type_display()} - {owner.game}"
+        Notification.objects.create(user=owner.owner, description=notification)
         return redirect('market')
+
+    def send_notification_email(self, email, text_content):
+        """ Send an email when offer is made by customer. """
+        subject, from_email, to = "New offer made by customer", "emistrij@gmail.com", email
+        html_content = f"<p>{text_content}</p>"
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
 
 
 class OfferDetailsView(LoginRequiredMixin, View):
@@ -217,9 +238,10 @@ class OfferDetailsView(LoginRequiredMixin, View):
                     if customer.id == customer_offer_id:
                         customer.status = "A"
                         offer_details = offer.get_offer_type_display() + "-" + str(offer.game)
-                        notification = (f"User {offer.owner.username} has accepted your offer for {offer_details}. Please "
-                                        f"reach out ot them via email {offer.owner.email}")
-                        Notification.objects.create(offer=customer, description=notification)
+                        notification = (
+                            f"User {offer.owner.username} has accepted your offer for {offer_details}. Please "
+                            f"reach out ot them via email {offer.owner.email}")
+                        Notification.objects.create(user=customer.customer, description=notification)
                         self.send_notification_email(customer.customer.email, notification)
 
                     else:
@@ -280,3 +302,27 @@ class SubscribeView(View):
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+
+
+class GameCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'gameapp.add_game'
+    model = Game
+    form_class = NewGameForm
+    template_name = 'add_game.html'
+    success_url = reverse_lazy('games')
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class ArticleCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'gameapp.add_article'
+    model = Article
+    form_class = NewArticleForm
+    template_name = 'add_article.html'
+    success_url = reverse_lazy('articles')
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+

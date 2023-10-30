@@ -1,24 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <section style="border: 1px solid #3498db; padding: 20px;">
     <h1>Latest game: {{ game.name }} </h1>
-    {{ game.description }} <br>
+    <p>{{ game.description }}</p> <br>
     <div class="centered-button">
         <a href="{% url 'games' %}" class="btn btn-primary">View All Games</a>
     </div>
+    </section><br>
 
+    <section style="border: 1px solid #3498db; padding: 20px;">
     <h1>Latest article: {{ article.title }} </h1>
-    {{ article.content }} <br>
+    <p>{{ article.content }}</p> <br>
     <div class="centered-button">
         <a href="{% url 'articles' %}" class="btn btn-primary">View All Articles</a>
     </div>
+    </section><br>
 
+    <section style="border: 1px solid #3498db; padding: 20px;">
     <h1>Latest market offer: {{ offer.get_offer_type_display }} - {{ offer.game }}</h1>
-    {{ offer.description }} <br>
+    <p>{{ offer.description }}</p> <br>
     <div class="centered-button">
         <a href="{% url 'market' %}" class="btn btn-primary">View Market</a>
     </div>
+    </section><br>
 
+    <section style="border: 1px solid #3498db; padding: 20px;">
     <h1>About</h1>
-    Welcome to GameConnect, place where you can find exclusive articles regarding my favourite games, exchange games with our community in market section.
+        <p>Welcome to GameConnect, place where you can find exclusive articles regarding my favourite games, exchange games with our community in market section.</p>
+    </section><br>
 {% endblock %}

@@ -4,10 +4,11 @@
     <h1>Market</h1>
     <div class="right-button">
         <a href="{% url 'add_offer' %}" class="btn btn-primary">Add new offer</a>
-    </div>
+    </div><br>
     {% for offer in object_list %}
+        <section style="border: 1px solid #3498db; padding: 20px;">
         <h2>{{ offer.get_offer_type_display }} - {{ offer.game }}</h2>
-        <p>Added: {{ offer.added }}</p>
+        <p>Added: {{ offer.added|date:"F j, Y P" }}</p>
         <p>{{ offer.description }}</p>
         {% if offer.price is not None %}
             <p>Price: {{ offer.price }}</p>
@@ -15,5 +16,6 @@
         <div class="centered-button">
             <a href="{% url 'make_offer' offer.id %}" class="btn-primary">Make an offer</a>
         </div>
+        </section><br>
     {% endfor %}
 {% endblock %}

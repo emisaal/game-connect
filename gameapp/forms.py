@@ -3,13 +3,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
-from django.forms import ModelForm
-from gameapp.models import ExchangeOffer, CustomerOffer
+from django.forms import ModelForm, Form
+from gameapp.models import ExchangeOffer, CustomerOffer, Game, Article
 
 User = get_user_model()
 
 
-class LoginForm(forms.Form):
+class LoginForm(Form):
     """ A form for user login, with username and password fields. """
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
@@ -72,11 +72,23 @@ class MakeOfferForm(ModelForm):
     )
 
 
-class AcceptForm(forms.Form):
+class AcceptForm(Form):
     """ A form for accepting an offer, specifically capturing the customer_offer_id. """
     customer_offer_id = forms.IntegerField(widget=forms.HiddenInput())
 
 
-class NotificationForm(forms.Form):
+class NotificationForm(Form):
     """A form for marking notifications as read"""
     notification_id = forms.IntegerField(widget=forms.HiddenInput())
+
+
+class NewGameForm(ModelForm):
+    class Meta:
+        model = Game
+        fields = ['name', 'description']
+
+
+class NewArticleForm(ModelForm):
+    class Meta:
+        model = Article
+        fields = ['slug', 'game', 'title', 'content']

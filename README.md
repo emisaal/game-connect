@@ -3,7 +3,7 @@
 
 ## Introduction
 Welcome to the GameConnect project! GameConnect is a Django-based web application that enables users not only to trade games but also provides access to exclusive articles related to gaming and more. 
-This README file provides an overview of the project's structure, functionality, and how to get it up and running on your local development environment.
+This README file provides an overview of the project's structure and functionality.
 
 ## Project Structure
 The GameConnect project is organized as follows:
@@ -21,7 +21,7 @@ GameConnect offers a range of exciting functionalities that make it a hub for ga
 
 - **Game Trading**: GameConnect allows users to trade their video games, giving gamers the opportunity to exchange games with others in the community.
 
-- **Exclusive Articles**: In addition to game trading, GameConnect provides access to exclusive articles. Gamers can stay updated on the latest gaming news, reviews, tipe and insights right on the platform.
+- **Exclusive Articles**: In addition to game trading, GameConnect provides access to exclusive articles for logged in users. Gamers can stay updated on the latest gaming news, reviews, tipe and insights right on the platform.
 
 - **Game and Article Listings**: Users can explore a comprehensive list of available games and articles, making it easy to discover new titles and content.
 

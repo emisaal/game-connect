@@ -22,7 +22,7 @@ class Game(models.Model):
     - description (TextField): A detailed description of the game.
     - added(DateTimeField): Timestamp when the game was added.
     """
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     added = models.DateTimeField(auto_now_add=True)
 
@@ -94,7 +94,12 @@ class CustomerOffer(models.Model):
 
 
 class Notification(models.Model):
-    """Model for accepted offers notifications"""
-    offer = models.ForeignKey(CustomerOffer, on_delete=models.CASCADE)
+    """Model for accepted offers notifications
+    Fields:
+    - user (ForeignKey): notification owner
+    - description (TextField): notification content
+    - status(BooleanField): notification status, shows whether user has seen it (defaulted to False)
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
     status = models.BooleanField(default=False)

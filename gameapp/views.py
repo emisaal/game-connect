@@ -123,7 +123,7 @@ class ChangePasswordView(View):
 
 
 class AddOfferView(LoginRequiredMixin, FormView):
-    """  A class-based view for adding exchange offers, with login requirement. """
+    """  A class-based view for adding exchange offer, with login requirement. """
     login_url = reverse_lazy('login')
     template_name = "add_offer.html"
     form_class = AddOfferForm
@@ -149,6 +149,7 @@ class MakeOfferView(LoginRequiredMixin, FormView):
     form_class = MakeOfferForm
 
     def get_form(self, form_class=None):
+        """ Customizes the form by setting the initial game name. """
         form = super().get_form(form_class)
         offer_id = self.kwargs.get('offer_id')
         selected_game = ExchangeOffer.objects.get(id=offer_id)
@@ -156,6 +157,7 @@ class MakeOfferView(LoginRequiredMixin, FormView):
         return form
 
     def get_context_data(self, **kwargs):
+        """ Adds offer-related context data to the view. """
         context = super().get_context_data(**kwargs)
         offer_id = self.kwargs.get('offer_id')
         context['offer_id'] = offer_id
@@ -178,7 +180,7 @@ class MakeOfferView(LoginRequiredMixin, FormView):
                         f"go to Your User Page - My active offers - Details to review it.")
         self.send_notification_email(owner.owner.email, text_content)
 
-        # create notification for offer owner
+        # create notification for offer's owner
         notification = f"New offer was made to Your listing {owner.get_offer_type_display()} - {owner.game}"
         Notification.objects.create(user=owner.owner, description=notification)
         return redirect('market')
@@ -204,7 +206,7 @@ class OfferDetailsView(LoginRequiredMixin, View):
 
         if offer.owner != request.user:
             raise Http404
-
+        # get all customer's offers
         customers = CustomerOffer.objects.filter(exchange_offer_id=offer_id)
         return render(request, 'offer_details.html', {"offer": offer, "customers": customers})
 

@@ -9,8 +9,7 @@ User = get_user_model()
 
 
 class AddOfferForm(ModelForm):
-    """ A form for adding exchange offers, inheriting from ModelForm,
-    used to create ExchangeOffer instances. """
+    """ A form for adding exchange offers. """
     captcha = CaptchaField()
 
     class Meta:
@@ -29,8 +28,7 @@ class AddOfferForm(ModelForm):
 
 
 class MakeOfferForm(ModelForm):
-    """ A form for making an offer on an existing exchange offer,
-    inheriting from ModelForm, used to create CustomerOffer instances. """
+    """ A form for making an offer on an existing exchange offer. """
     captcha = CaptchaField()
 
     class Meta:
@@ -49,7 +47,7 @@ class MakeOfferForm(ModelForm):
 
 
 class AcceptForm(Form):
-    """ A form for accepting an offer, specifically capturing the customer_offer_id. """
+    """ A form for accepting an offer. """
     customer_offer_id = forms.IntegerField(widget=forms.HiddenInput())
 
 

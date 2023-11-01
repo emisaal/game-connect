@@ -16,9 +16,8 @@ def user(client):
 
 
 @pytest.fixture
-def exchange_offer():
+def exchange_offer(user):
     """ Create a sample exchange offer """
-    game = Game.objects.create(name="Game 1", description="Description for Game 1")
-    offer = ExchangeOffer.objects.create(owner=User.objects.create(username='user1'), offer_type='S', game=game,
-                                         price=10.0, description='Offer 1', status=True)
+    game = Game.objects.create(name="Game 1", description="text")
+    offer = ExchangeOffer.objects.create(owner=user, offer_type='S', game=game, price=10.0, description='text')
     return offer

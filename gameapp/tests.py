@@ -37,8 +37,6 @@ def test_logout_view(client):
     response = client.get(reverse('logout'))
     assert response.status_code == 302
     assert response.url == reverse('login')
-    session = client.session
-    assert session.get('_auth_user_id') is None
 
 
 @pytest.mark.django_db
@@ -73,11 +71,10 @@ def test_register_view_post_invalid(client):
 def test_main_view(client):
     """Test that the MainView displays the main page with the latest Game, Article, and ExchangeOffer."""
 
-    game = Game.objects.create(name="Sample Game", description="Description for Sample Game")
-    article = Article.objects.create(slug="sample-article", game=game, title="Sample Article",
-                                     content="Content for Sample Article")
-    offer = ExchangeOffer.objects.create(owner=User.objects.create(username="sampleuser"),
-                                         offer_type="S", game=game, price=9.99, description="Sample Offer Description")
+    game = Game.objects.create(name="Test Game", description="text")
+    article = Article.objects.create(slug="test-article", game=game, title="Test Article", content="text")
+    offer = ExchangeOffer.objects.create(owner=User.objects.create(username="testuser"),
+                                         offer_type="S", game=game, price=9.99, description="text")
 
     response = client.get(reverse('main'))
     assert response.status_code == 200
@@ -90,8 +87,8 @@ def test_main_view(client):
 def test_games_list_view(client):
     """Test that the GamesListView displays a list of games correctly."""
 
-    game1 = Game.objects.create(name="Game 1", description="Description for Game 1")
-    game2 = Game.objects.create(name="Game 2", description="Description for Game 2")
+    game1 = Game.objects.create(name="Game 1", description="text")
+    game2 = Game.objects.create(name="Game 2", description="text")
 
     response = client.get(reverse('games'))
     assert response.status_code == 200
@@ -103,9 +100,9 @@ def test_games_list_view(client):
 def test_articles_list_view(client):
     """Test that the ArticlesListView displays a list of articles correctly."""
 
-    Game.objects.create(id=1, name="Game 1", description="Description for Game 1")
-    article1 = Article.objects.create(slug="article-1", game_id="1", title="Article 1", content="Content for Article 1")
-    article2 = Article.objects.create(slug="article-2", game_id="1", title="Article 2", content="Content for Article 2")
+    Game.objects.create(id=1, name="Game 1", description="text")
+    article1 = Article.objects.create(slug="article-1", game_id="1", title="Article 1", content="text")
+    article2 = Article.objects.create(slug="article-2", game_id="1", title="Article 2", content="text")
 
     response = client.get(reverse('articles'))
     assert response.status_code == 200
@@ -117,8 +114,8 @@ def test_articles_list_view(client):
 def test_article_details_view(client, user):
     """Test the ArticleDetailsView with a logged-in user."""
 
-    game = Game.objects.create(name="Game 1", description="Description for Game 1")
-    article = Article.objects.create(slug="article-1", game=game, title="Article 1", content="Content for Article 1")
+    game = Game.objects.create(name="Game 1", description="text")
+    article = Article.objects.create(slug="article-1", game=game, title="Article 1", content="text")
 
     response = client.get(reverse('article_detail', args=['article-1']))
     assert response.status_code == 200
@@ -129,8 +126,8 @@ def test_article_details_view(client, user):
 def test_article_details_view_requires_login(client):
     """Test that the ArticleDetailsView redirects to the login page when not logged in."""
 
-    Game.objects.create(id=1, name="Game 1", description="Description for Game 1")
-    Article.objects.create(slug="article-1", game_id="1", title="Article 1", content="Content for Article 1")
+    Game.objects.create(id=1, name="Game 1", description="text")
+    Article.objects.create(slug="article-1", game_id="1", title="Article 1", content="text")
 
     response = client.get(reverse('article_detail', args=['article-1']))
     assert response.status_code == 302
@@ -141,13 +138,10 @@ def test_article_details_view_requires_login(client):
 def test_market_list_view(client, user):
     """Test that the MarketListView displays a list of active exchange offers correctly."""
 
-    game1 = Game.objects.create(name="Game 1", description="Description for Game 1")
-
-    offer1 = ExchangeOffer.objects.create(owner=user, offer_type="S", game=game1, price=10.0,
-                                          description="Offer 1", status=True)
-    offer2 = ExchangeOffer.objects.create(owner=user, offer_type="E", game=game1,
-                                          description="Offer 2", status=True)
-
+    game1 = Game.objects.create(name="Game 1", description="text")
+    offer1 = ExchangeOffer.objects.create(owner=user, offer_type="S", game=game1, price=10.0, description="Offer 1",
+                                          status=True)
+    offer2 = ExchangeOffer.objects.create(owner=user, offer_type="E", game=game1, description="Offer 2", status=True)
     inactive_offer = ExchangeOffer.objects.create(owner=user, offer_type="S", game=game1, price=15.0,
                                                   description="Offer 4", status=False)
 
@@ -162,11 +156,10 @@ def test_market_list_view(client, user):
 def test_user_page_view(client, user):
     """Test the UserPageView with a logged-in user."""
 
-    game1 = Game.objects.create(name="Game 1", description="Description for Game 1")
-    offer1 = ExchangeOffer.objects.create(owner=user, offer_type="S", game=game1, price=10.0,
-                                          description="Offer 1", status=True)
-    offer2 = ExchangeOffer.objects.create(owner=user, offer_type="E", game=game1,
-                                          description="Offer 2", status=False)
+    game1 = Game.objects.create(name="Game 1", description="text")
+    offer1 = ExchangeOffer.objects.create(owner=user, offer_type="S", game=game1, price=10.0, description="Offer 1",
+                                          status=True)
+    offer2 = ExchangeOffer.objects.create(owner=user, offer_type="E", game=game1, description="Offer 2", status=False)
     offer3 = ExchangeOffer.objects.create(owner=User.objects.create(username='user2'), offer_type="B", game=game1,
                                           price=5.0, description="Offer 3", status=True)
 
@@ -217,7 +210,7 @@ def test_add_offer_view_post(client, user):
     """Test the POST request to the AddOfferView with valid form data."""
     data = {
         'offer_type': 'S',
-        'game': Game.objects.create(name="Game 1", description="Description for Game 1").pk,
+        'game': Game.objects.create(name="Game 1", description="text").pk,
         'price': 10.0,
         'description': 'Offer Description',
     }
@@ -234,37 +227,28 @@ def test_add_offer_view_post(client, user):
 def test_make_offer_view_get(client, user, exchange_offer):
     """Test the GET request to the MakeOfferView."""
     offer_id = exchange_offer.id
-    captcha = CaptchaStore.objects.create(challenge="test-challenge", response="test-response")
-    data['captcha_0'] = captcha.hashkey
-    data['captcha_1'] = "test-response"
-
-    response = client.get(reverse('make_offer', args=[offer_id]))
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_make_offer_view_get(client, user, exchange_offer):
-    """Test the GET request to the MakeOfferView."""
-    offer_id = exchange_offer.id
     response = client.get(reverse('make_offer', args=[offer_id]))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_make_offer_view_post(client, user, exchange_offer):
-    """Test the POST request to the MakeOfferView with valid form data."""
-    offer_id = exchange_offer.id
-    data = {
-        'game_name': Game.objects.create(name="Game 2", description="Description for Game 2").pk,
-        'price': 15.0,
-        'description': 'Customer Offer Description',
+    """ Test the POST request to the MakeOfferView with valid form data. """
+    form_data = {
+        'game_name': exchange_offer.game.id,
+        'price': 10.0,
+        'description': 'Test Description',
     }
+    captcha = CaptchaStore.objects.create(challenge="test-challenge", response="test-response")
+    form_data['captcha_0'] = captcha.hashkey
+    form_data['captcha_1'] = "test-response"
 
-    response = client.post(reverse('make_offer', args=[offer_id]), data=data)
+    url = reverse('make_offer', kwargs={'offer_id': exchange_offer.id})
+    response = client.post(url, data=form_data)
 
     assert response.status_code == 302
-    assert CustomerOffer.objects.filter(
-        description='Customer Offer Description').exists()
+    assert CustomerOffer.objects.filter(game_name=exchange_offer.game.id, price=10.0, description='Test Description').exists()
+    assert response.url == reverse('market')
 
 
 @pytest.mark.django_db

@@ -37,7 +37,6 @@ class MainView(View):
     """ A class-based view for the main page. """
 
     def get(self, request):
-        """ Handles a GET request to the main page and renders latest Game, Article, and ExchangeOffer objects. """
         game = Game.objects.latest('added')
         article = Article.objects.latest('added')
         offer = ExchangeOffer.objects.latest('added')
@@ -69,7 +68,7 @@ class ArticleDetailsView(LoginRequiredMixin, View):
 
 
 class MarketListView(ListView):
-    """ A class-based view for listing exchange offers in the market. """
+    """ A class-based view for listing all active exchange offers ordered by the added date. """
     template_name = "market.html"
     model = ExchangeOffer
 
@@ -93,6 +92,7 @@ class UserPageView(LoginRequiredMixin, View):
             "active_offers": active_offers, "inactive_offers": inactive_offers, "notifications": notifications})
 
     def post(self, request, user_id):
+        """ Handles POST requests to mark notifications as read by user. """
         form = NotificationForm(request.POST)
         if form.is_valid():
             notification_id = form.cleaned_data['notification_id']
@@ -104,6 +104,7 @@ class UserPageView(LoginRequiredMixin, View):
 
 
 class ChangePasswordView(View):
+    """ A class-based view for allowing a user to change their password. """
     template_name = 'change_password.html'
 
     def get(self, request, user_id):
@@ -286,6 +287,7 @@ class SubscribeView(View):
 
 
 class GameCreateView(PermissionRequiredMixin, CreateView):
+    """ A class-based view for creating a new game, with permission requirements. """
     permission_required = 'gameapp.add_game'
     model = Game
     form_class = NewGameForm
@@ -297,6 +299,7 @@ class GameCreateView(PermissionRequiredMixin, CreateView):
 
 
 class ArticleCreateView(PermissionRequiredMixin, CreateView):
+    """ A class-based view for creating a new article, with permission requirements. """
     permission_required = 'gameapp.add_article'
     model = Article
     form_class = NewArticleForm

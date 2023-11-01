@@ -54,17 +54,19 @@ class AcceptForm(Form):
 
 
 class NotificationForm(Form):
-    """A form for marking notifications as read"""
+    """ A form for marking notifications as read. """
     notification_id = forms.IntegerField(widget=forms.HiddenInput())
 
 
 class NewGameForm(ModelForm):
+    """ A form for adding new game to database. """
     class Meta:
         model = Game
         fields = ['name', 'description']
 
 
 class NewArticleForm(ModelForm):
+    """ A form for adding new article to database. """
     class Meta:
         model = Article
-        fields = ['slug', 'game', 'title', 'content']
+        fields = ['game', 'title', 'content']

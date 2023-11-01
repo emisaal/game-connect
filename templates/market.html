@@ -4,7 +4,19 @@
     <h1>Market</h1>
     <div class="right-button">
         <a href="{% url 'add_offer' %}" class="btn btn-primary">Add new offer</a>
-    </div><br>
+    </div>
+
+    <form method="get" action="{% url 'market' %}">
+    <p>Filter by:</p>
+    <select name="game">
+        <option value="">All Games</option>
+        {% for game in games %}
+            <option value="{{ game }}">{{ game }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go">
+    </form><br>
+
     {% for offer in object_list %}
         <section style="border: 1px solid #3498db; padding: 20px;">
         <h2>{{ offer.get_offer_type_display }} - {{ offer.game }}</h2>

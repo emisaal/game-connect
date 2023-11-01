@@ -73,8 +73,20 @@ class MarketListView(ListView):
     template_name = "market.html"
     model = ExchangeOffer
 
+    def get_context_data(self, **kwargs):
+        """ Adds game list without duplicates to context. """
+        context = super().get_context_data(**kwargs)
+        context['games'] = ExchangeOffer.objects.filter(status=True).values_list('game__name', flat=True).distinct()
+
+        return context
+
     def get_queryset(self):
-        active_offers = ExchangeOffer.objects.filter(status=True).order_by('-added')
+        """ Retrieves the queryset of active exchange offers, optionally filtered by the selected game. """
+        game_filter = self.request.GET.get('game')
+        if game_filter:
+            active_offers = ExchangeOffer.objects.filter(status=True, game__name=game_filter).order_by('-added')
+        else:
+            active_offers = ExchangeOffer.objects.filter(status=True).order_by('-added')
         return active_offers
 
 

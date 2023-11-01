@@ -1,11 +1,19 @@
 from captcha.fields import CaptchaField
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm, Form
 
 from gameapp.models import ExchangeOffer, CustomerOffer, Game, Article
 
 User = get_user_model()
+
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(
+        required=True,
+        help_text='Enter your email address.'
+    )
 
 
 class AddOfferForm(ModelForm):

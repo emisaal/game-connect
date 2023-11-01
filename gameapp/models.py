@@ -42,6 +42,7 @@ class Article(models.Model):
     - slug (SlugField): A user-friendly URL for the article (auto-generated based on the title).
     - game (ForeignKey): A reference to the associated game.
     - title (CharField): The title of the article (limited to 100 characters).
+    - summary (TextField): Summary for an article.
     - content (TextField): Content of the article.
     - added (DateTimeField): Timestamp when the article was created.
 
@@ -50,6 +51,7 @@ class Article(models.Model):
     slug = models.SlugField(unique=True, max_length=100, primary_key=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    summary = models.TextField()
     content = models.TextField()
     added = models.DateTimeField(auto_now_add=True)
 

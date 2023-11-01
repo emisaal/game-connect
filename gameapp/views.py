@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import logout, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.mail import EmailMultiAlternatives
@@ -11,8 +11,7 @@ from django.views import View
 from django.views.generic import FormView, ListView, CreateView
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
-from gameapp.forms import RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm, \
-    NewGameForm, NewArticleForm
+from gameapp.forms import AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm, NewGameForm, NewArticleForm
 from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer, Notification
 from gameconnect import local_settings
 
@@ -26,19 +25,10 @@ class CustomLoginView(LoginView):
     template_name = "login.html"
 
 
-class RegisterView(View):
-    """ A class-based view for user registration. """
-
-    def get(self, request):
-        form = RegistrationForm()
-        return render(request, 'register.html', {'form': form})
-
-    def post(self, request):
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-        return render(request, 'register.html', {'form': form})
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'register.html'
+    success_url = reverse_lazy('login')
 
 
 class MainView(View):

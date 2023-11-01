@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -10,7 +11,7 @@ from django.views import View
 from django.views.generic import FormView, ListView, CreateView
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
-from gameapp.forms import LoginForm, RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm, \
+from gameapp.forms import RegistrationForm, AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm, \
     NewGameForm, NewArticleForm
 from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer, Notification
 from gameconnect import local_settings
@@ -21,23 +22,8 @@ server = local_settings.MAILCHIMP_DATA_CENTER
 list_id = local_settings.MAILCHIMP_EMAIL_LIST_ID
 
 
-class LoginView(FormView):
-    """ A class-based view for handling user login. """
+class CustomLoginView(LoginView):
     template_name = "login.html"
-    form_class = LoginForm
-    success_url = reverse_lazy('main')
-
-    def form_valid(self, form):
-        login(self.request, form.user)
-        return super().form_valid(form)
-
-
-class LogoutView(View):
-    """ A class-based view for logging out a user. """
-
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return redirect('login')
 
 
 class RegisterView(View):

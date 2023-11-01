@@ -1,28 +1,12 @@
 from captcha.fields import CaptchaField
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
-from django.contrib.auth import get_user_model, authenticate
 from django.forms import ModelForm, Form
+
 from gameapp.models import ExchangeOffer, CustomerOffer, Game, Article
 
 User = get_user_model()
-
-
-class LoginForm(Form):
-    """ A form for user login, with username and password fields. """
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
-
-    def clean(self):
-        """ A method for cleaning and validating form data, and authenticating the user. """
-        cd = super().clean()
-        username = cd.get('username')
-        password = cd.get('password')
-
-        self.user = authenticate(username=username, password=password)
-        if self.user is None:
-            raise ValidationError('wrong username or password')
 
 
 class RegistrationForm(UserCreationForm):

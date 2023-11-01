@@ -12,7 +12,7 @@ User = get_user_model()
 
 @pytest.mark.django_db
 def test_login_view_valid_login(client):
-    """LoginView(FormView): Test a valid login attempt, expecting a successful redirect (HTTP 302)."""
+    """CustomLoginView: Test a valid login attempt, expecting a successful redirect (HTTP 302)."""
     user_data = {'username': 'testuser', 'password': 'validpassword123!@#'}
     User.objects.create_user(**user_data)
     response = client.post(reverse('login'), data=user_data)
@@ -21,7 +21,7 @@ def test_login_view_valid_login(client):
 
 @pytest.mark.django_db
 def test_login_view_invalid_login(client):
-    """LoginView(FormView): Test an invalid login attempt, expecting a form submission failure (HTTP 200)."""
+    """CustomLoginView: Test an invalid login attempt, expecting a form submission failure (HTTP 200)."""
     user_data = {'username': 'testuser', 'password': 'invalidpassword'}
     response = client.post(reverse('login'), data=user_data)
     assert response.status_code == 200

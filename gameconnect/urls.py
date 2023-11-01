@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from captcha import urls as captcha_urls
-from gameapp.views import (LoginView, LogoutView, RegisterView, UserPageView, MainView, GamesListView,
+from gameapp.views import (CustomLoginView, RegisterView, UserPageView, MainView, GamesListView,
                            ArticlesListView, ArticleDetailsView, MarketListView, AddOfferView,
                            MakeOfferView, OfferDetailsView, SubscribeView, ChangePasswordView, GameCreateView,
                            ArticleCreateView)
@@ -9,7 +10,7 @@ from gameapp.views import (LoginView, LogoutView, RegisterView, UserPageView, Ma
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainView.as_view(), name='main'),
-    path('login/', LoginView.as_view(), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('subscribe/', SubscribeView.as_view(), name='subscribe'),

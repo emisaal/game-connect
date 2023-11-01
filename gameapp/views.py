@@ -22,10 +22,12 @@ list_id = local_settings.MAILCHIMP_EMAIL_LIST_ID
 
 
 class CustomLoginView(LoginView):
+    """ A class-based view for handling user login. """
     template_name = "login.html"
 
 
 class RegisterView(CreateView):
+    """ A class-based view for user registration. """
     form_class = UserCreationForm
     template_name = 'register.html'
     success_url = reverse_lazy('login')
@@ -35,6 +37,7 @@ class MainView(View):
     """ A class-based view for the main page. """
 
     def get(self, request):
+        """ Handles a GET request to the main page and renders latest Game, Article, and ExchangeOffer objects. """
         game = Game.objects.latest('added')
         article = Article.objects.latest('added')
         offer = ExchangeOffer.objects.latest('added')
@@ -45,12 +48,14 @@ class GamesListView(ListView):
     """ A class-based view for listing games. """
     template_name = "games.html"
     model = Game
+    ordering = 'name'
 
 
 class ArticlesListView(ListView):
     """ A class-based view for listing articles. """
     template_name = "articles.html"
     model = Article
+    ordering = '-added'
 
 
 class ArticleDetailsView(LoginRequiredMixin, View):

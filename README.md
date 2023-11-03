@@ -17,24 +17,34 @@ The GameConnect project is organized as follows:
 ## Functionalities
 GameConnect offers a range of exciting functionalities that make it a hub for gamers looking to connect, trade games, and access exclusive articles:
 
-- **User Registration and Login**: Users can easily register and log in to their GameConnect accounts, providing a secure and personalized experience.
+### Authentication and User Management
+- User registration and login.
+- Custom login view.
+- Change password functionality.
+- User pages with active and inactive offers and notifications.
+- User-specific actions (f.e. mark notifications as read).
 
-- **Game Trading**: GameConnect allows users to trade their video games, giving gamers the opportunity to exchange games with others in the community.
+### Main Page
+- Display the latest game, article, and exchange offer on the main page.
 
-- **Exclusive Articles**: In addition to game trading, GameConnect provides access to exclusive articles for logged in users. Gamers can stay updated on the latest gaming news, reviews, tipe and insights right on the platform.
+### Game and Article Listing
+- List games and articles.
+- Order games by name and articles by the added date.
+- Display game and article details.
 
-- **Game and Article Listings**: Users can explore a comprehensive list of available games and articles, making it easy to discover new titles and content.
+### Exchange Offers and Market
+- List active exchange offers.
+- Filter exchange offers by game.
+- Create and manage exchange offers.
+- Make offers on existing exchange offers.
+- Accept or reject customer offers.
+- Email notifications for offer actions.
 
-- **Exchange Offers**: Users can create, manage, and view exchange offers in the market, making it simple to find trade partners for their games.
+### Email Subscription
+- Subscribe to a mailing list using the Mailchimp API.
+- Send a welcome email to new subscribers.
 
-- **User Pages**: Every user has a dedicated page where they can manage their active and inactive exchange offers and stay informed with notifications.
-
-- **Adding Offers**: Users can easily add new exchange offers to the market, ensuring a continuous flow of gaming trade opportunities.
-
-- **Making Offers**: Want to trade for a specific game? GameConnect allows users to make offers on existing exchange offers, facilitating smooth interactions between gamers.
-
-- **Offer Details**: Users can view detailed information about exchange offers and accept or decline offers.
-
-- **Email Subscriptions**: Stay updated with the latest gaming news and offers by subscribing to our email mailing list.
+### Game and Article Management (Admin)
+- Create new games and articles with permission requirements.
 
 With these diverse functionalities, GameConnect caters to gamers' needs for both trading games and staying informed with exclusive gaming articles. Get ready to connect, trade, and explore the gaming world with GameConnect!

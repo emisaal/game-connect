@@ -5,6 +5,29 @@
 Welcome to the GameConnect project! GameConnect is a Django-based web application that enables users not only to trade games but also provides access to exclusive articles related to gaming and more. 
 This README file provides an overview of the project's structure and functionality.
 
+# GameConnect - README
+
+- [Introduction](#introduction)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Clone the Repository](#1-clone-the-repository)
+  - [Create a Virtual Environment (Optional)](#2-create-a-virtual-environment-optional)
+  - [Install Dependencies](#3-install-dependencies)
+  - [Set Up the Database](#4-set-up-the-database)
+  - [Create an Admin User (Optional)](#5-create-an-admin-user-optional)
+  - [Run the Development Server](#6-run-the-development-server)
+  - [Access the Admin Panel (Optional)](#7-access-the-admin-panel-optional)
+  - [Enjoy the Application](#8-enjoy-the-application)
+- [Project Structure](#project-structure)
+- [Functionalities](#functionalities)
+  - [Authentication and User Management](#authentication-and-user-management)
+  - [Main Page](#main-page)
+  - [Game and Article Listing](#game-and-article-listing)
+  - [Exchange Offers and Market](#exchange-offers-and-market)
+  - [Email Subscription](#email-subscription)
+  - [Game and Article Management (Admin)](#game-and-article-management-admin)
+
+
 ## Installation
 
 To run this Django project on your local machine, follow the steps below:

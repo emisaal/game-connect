@@ -8,7 +8,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, ListView, CreateView
+from django.views.generic import FormView, ListView, CreateView, TemplateView
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
 from gameapp.forms import AddOfferForm, MakeOfferForm, AcceptForm, NotificationForm, NewGameForm, NewArticleForm, \
@@ -69,7 +69,8 @@ class ArticleDetailsView(LoginRequiredMixin, View):
 
 
 class MarketListView(ListView):
-    """ A class-based view for listing all active exchange offers ordered by the added date. """
+    """ A class-based view for listing all active exchange offers ordered by the added date,
+    optionally filtered by game name. """
     template_name = "market.html"
     model = ExchangeOffer
 
@@ -123,6 +124,7 @@ class ChangePasswordView(View):
     def get(self, request, user_id):
         if user_id != request.user.id:
             raise Http404
+
         form = PasswordChangeForm(request.user)
         return render(request, self.template_name, {'form': form})
 
@@ -151,7 +153,6 @@ class AddOfferView(LoginRequiredMixin, FormView):
         new_offer = form.save(commit=False)
         new_offer.owner_id = user_id
         new_offer.save()
-
         return redirect('market')
 
 
@@ -324,4 +325,25 @@ class ArticleCreateView(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
+
+class NotificationView(LoginRequiredMixin, View):
+    """ A class-based view for displaying all user notifications, with login requirement. """
+    login_url = reverse_lazy('login')
+
+    def get(self, request, user_id):
+        if user_id != request.user.id:
+            raise Http404
+
+        notifications = Notification.objects.filter(user=user_id).order_by('-id')
+        return render(request, 'notifications.html', {"notifications": notifications})
+
+    def post(self, request, user_id):
+        """ Handles POST requests to delete notifications. """
+        form = NotificationForm(request.POST)
+        if form.is_valid():
+            notification_id = form.cleaned_data['notification_id']
+            notification = Notification.objects.get(id=notification_id)
+            notification.delete()
+
+        return redirect('notifications', user_id=request.user.id)
 

@@ -5,7 +5,7 @@ from captcha import urls as captcha_urls
 from gameapp.views import (CustomLoginView, RegisterView, UserPageView, MainView, GamesListView,
                            ArticlesListView, ArticleDetailsView, MarketListView, AddOfferView,
                            MakeOfferView, OfferDetailsView, SubscribeView, ChangePasswordView, GameCreateView,
-                           ArticleCreateView)
+                           ArticleCreateView, NotificationView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,6 +15,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('subscribe/', SubscribeView.as_view(), name='subscribe'),
     path('user/<int:user_id>/', UserPageView.as_view(), name='user_page'),
+    path('user/<int:user_id>/notifications/', NotificationView.as_view(), name='notifications'),
     path('user/<int:user_id>/password/', ChangePasswordView.as_view(), name='password_change'),
     path('games/', GamesListView.as_view(), name='games'),
     path('articles/', ArticlesListView.as_view(), name='articles'),

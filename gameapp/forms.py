@@ -75,4 +75,4 @@ class NewArticleForm(ModelForm):
     """ A form for adding new article to database. """
     class Meta:
         model = Article
-        fields = ['game', 'title', 'content']
+        fields = ['game', 'title', 'summary', 'content']

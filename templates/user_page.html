@@ -6,7 +6,7 @@
     </section><br>
     <section style="border: 1px solid #3498db; padding: 15px;">
     <h1>My notifications</h1>
-    {% for notification in notifications %}
+    {% for notification in notifications|slice:":5" %}
         {% if notification.status %}
         <p>{{ notification.description }}</p>
         {% else %}
@@ -18,6 +18,9 @@
             </form>
         {% endif %}
     {% endfor %}
+        <div class="centered-button">
+            <a href="{% url 'notifications' user.id %}" class="btn-primary">View all</a>
+        </div>
     </section><br>
 
     <section style="border: 1px solid #3498db; padding: 15px;">

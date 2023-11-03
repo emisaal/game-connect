@@ -1,5 +1,6 @@
 # GameConnect - README
 
+# Table of contents:
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Project Structure](#project-structure)

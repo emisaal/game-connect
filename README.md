@@ -5,6 +5,93 @@
 Welcome to the GameConnect project! GameConnect is a Django-based web application that enables users not only to trade games but also provides access to exclusive articles related to gaming and more. 
 This README file provides an overview of the project's structure and functionality.
 
+## Installation
+
+To run this Django project on your local machine, follow the steps below:
+
+### Prerequisites
+
+- [Python](https://www.python.org/downloads/)
+- [Django](https://www.djangoproject.com/download/)
+- Database system supported by Django (e.g., PostgreSQL, MySQL, or SQLite)
+
+### 1. Clone the Repository
+
+Clone this repository to your local machine using Git:
+
+```bash
+git clone https://github.com/emisaal/game-connect.git
+```
+
+### 2. Create a Virtual Environment (Optional)
+
+It's a good practice to create a virtual environment to isolate project dependencies. To create a virtual environment, run:
+
+```bash
+python3 -m venv venv
+```
+
+Activate the virtual environment:
+
+- **On Windows:**
+
+  ```bash
+  venv\Scripts\activate
+  ```
+
+- **On macOS and Linux:**
+
+  ```bash
+  source venv/bin/activate
+  ```
+
+### 3. Install Dependencies
+
+In the project directory, install the Python dependencies using pip:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Set Up the Database
+
+Create the database tables and apply migrations:
+
+```bash
+python manage.py migrate
+```
+
+### 5. Create an Admin User (Optional)
+
+You can create an admin user to access the Django admin panel:
+
+```bash
+python manage.py createsuperuser
+```
+
+Follow the prompts to enter a username, email, and password.
+
+### 6. Run the Development Server
+
+Start the development server:
+
+```bash
+python manage.py runserver
+```
+
+The application will be accessible at `http://127.0.0.1:8000/` in your web browser.
+
+### 7. Access the Admin Panel (Optional)
+
+If you created an admin user, you can access the Django admin panel at `http://127.0.0.1:8000/admin/`.
+
+### 8. Enjoy the Application!
+
+You're all set! You can now use the application, create users, and explore its features.
+
+---
+
+
 ## Project Structure
 The GameConnect project is organized as follows:
 

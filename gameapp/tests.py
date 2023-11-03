@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.contrib.auth.models import User
 from pytest_django.asserts import assertRedirects
-from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer
+from gameapp.models import Game, Article, ExchangeOffer, CustomerOffer, Notification
 from conftest import user, exchange_offer
 
 User = get_user_model()
@@ -257,3 +257,22 @@ def test_subscribe_view_get(client):
     response = client.get(reverse('subscribe'))
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_notification_view_get(client, user):
+    """ Test the GET request to the NotificationView. """
+    url = reverse('notifications', kwargs={'user_id': user.id})
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_notification_view_post(client, user):
+    notification_id = Notification.objects.create(user=user, description='text').pk
+    data = {'notification_id': notification_id}
+    url = reverse('notifications', kwargs={'user_id': user.id})
+    response = client.post(url, data)
+
+    assert response.status_code == 302
+    assert Notification.objects.filter(id=notification_id).exists() is False

@@ -1,16 +1,13 @@
 # GameConnect - README
 
-
-## Introduction
-Welcome to the GameConnect project! GameConnect is a Django-based web application that enables users not only to trade games but also provides access to exclusive articles related to gaming and more. 
-This README file provides an overview of the project's structure and functionality.
-
-# GameConnect - README
-
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Project Structure](#project-structure)
 - [Functionalities](#functionalities)
+
+## Introduction
+Welcome to the GameConnect project! GameConnect is a Django-based web application that enables users not only to trade games but also provides access to exclusive articles related to gaming and more. 
+This README file provides an overview of the project's structure and functionality.
 
 ## Installation
 
